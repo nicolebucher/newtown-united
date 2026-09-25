@@ -26,6 +26,9 @@ const seiten = defineCollection({
       )
       .default([]),
     infos: z.array(z.object({ bezeichnung: z.string(), wert: z.string() })).default([]),
+    downloads: z
+      .array(z.object({ titel: z.string(), beschreibung: z.string().nullish(), datei: z.string().nullish() }))
+      .default([]),
     karten: z.array(z.string()).default([]),
     ligaAnzeigen: z.boolean().default(false),
     formular: z

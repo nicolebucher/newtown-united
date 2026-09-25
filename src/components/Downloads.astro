@@ -1,0 +1,46 @@
+---
+import { oeffentlicheDateiExistiert } from '../lib/seiten';
+
+interface Props {
+  downloads: { titel: string; beschreibung?: string | null; datei?: string | null }[];
+}
+// Kacheln ohne hochgeladene Datei werden ausgeblendet, damit keine toten Links entstehen.
+const kacheln = Astro.props.downloads.filter((d) => oeffentlicheDateiExistiert(d.datei));
+const endung = (datei: string) => datei.split('.').pop()?.toUpperCase() ?? 'DATEI';
+---
+{kacheln.length > 0 && (
+  <section class="section wrap">
+    <h2>Zum Herunterladen</h2>
+    <div class="downloads">
+      {kacheln.map((d) => (
+        <a class="download" href={d.datei} download>
+          <span class="typ">{endung(d.datei!)}</span>
+          <span class="text">
+            <strong>{d.titel}</strong>
+            {d.beschreibung && <span>{d.beschreibung}</span>}
+          </span>
+          <span class="pfeil" aria-hidden="true">↓</span>
+        </a>
+      ))}
+    </div>
+  </section>
+)}
+
+<style>
+  .downloads { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+  .download {
+    display: grid; grid-template-columns: auto 1fr auto; gap: 16px; align-items: center;
+    padding: 18px 20px; border-radius: var(--radius); text-decoration: none; color: var(--fg);
+    background: var(--surface); border: 1px solid var(--line);
+    transition: border-color .15s ease, transform .15s ease;
+  }
+  .download:hover { border-color: var(--rot); transform: translateY(-2px); color: var(--fg); }
+  .typ {
+    display: grid; place-items: center; width: 52px; height: 60px; border-radius: 8px;
+    background: var(--rot); color: var(--fg); font-weight: 800; font-size: .8rem; letter-spacing: .05em;
+  }
+  .text { display: grid; gap: 2px; }
+  .text span { color: var(--muted); font-size: .92rem; line-height: 1.4; }
+  .pfeil { font-size: 1.4rem; color: var(--link); }
+  @media (prefers-reduced-motion: reduce) { .download { transition: none; } .download:hover { transform: none; } }
+</style>

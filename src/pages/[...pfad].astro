@@ -3,6 +3,7 @@ import { getCollection, render } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import ContactForm from '../components/ContactForm.astro';
 import Liga from '../components/Liga.astro';
+import Downloads from '../components/Downloads.astro';
 import { seitenUrl, oeffentlicheDateiExistiert, type Seite } from '../lib/seiten';
 
 export async function getStaticPaths() {
@@ -75,6 +76,8 @@ const formular = d.formular.discriminant ? d.formular.value : null;
   )}
 
   {d.ligaAnzeigen && <Liga />}
+
+  <Downloads downloads={d.downloads} />
 
   {formular && (
     <section class="section wrap" id="formular">

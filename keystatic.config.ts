@@ -94,6 +94,22 @@ export default config({
             itemLabel: (p) => `${p.fields.bezeichnung.value}: ${p.fields.wert.value}`,
           },
         ),
+        downloads: fields.array(
+          fields.object({
+            titel: fields.text({ label: 'Titel', validation: { isRequired: true } }),
+            beschreibung: fields.text({ label: 'Kurzer Text', multiline: true }),
+            datei: fields.file({
+              label: 'Datei (z. B. PDF)',
+              directory: 'public/downloads',
+              publicPath: '/downloads/',
+            }),
+          }),
+          {
+            label: 'Download-Kacheln',
+            description: 'Dateien wie Mitgliedsantrag oder Regelwerk als Kachel zum Herunterladen.',
+            itemLabel: (p) => p.fields.titel.value || 'Download',
+          },
+        ),
         karten: fields.array(fields.relationship({ label: 'Seite', collection: 'seiten' }), {
           label: 'Karten mit Links zu anderen Seiten',
           itemLabel: (p) => p.value ?? 'Seite wählen',
