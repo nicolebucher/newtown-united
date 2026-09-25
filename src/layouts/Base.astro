@@ -29,7 +29,7 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWit
     <meta property="og:type" content="website" />
   </head>
   <body>
-    <div class="bunt-stripe"></div>
+    <div class="wine-rule"></div>
     <header class="site-header">
       <div class="wrap bar">
         <a class="brand" href="/">
@@ -76,25 +76,25 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWit
         </ul>
         <div class="copy">© {new Date().getFullYear()} {site.name}</div>
       </div>
-      <div class="bunt-stripe"></div>
+      <div class="wine-rule"></div>
     </footer>
   </body>
 </html>
 
 <style>
-  .site-header { background: var(--paper); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 10; }
+  .site-header { background: var(--bg); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 10; }
   .bar { display: flex; align-items: center; justify-content: space-between; min-height: 68px; gap: 16px; }
-  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); font-family: var(--font-display); font-size: 1.15rem; }
-  .brand small { font-family: var(--font-body); font-weight: 700; font-size: .8rem; color: var(--accent); }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--fg); font-family: var(--font-display); font-size: 1.15rem; }
+  .brand small { font-family: var(--font-body); font-weight: 700; font-size: .8rem; color: var(--link); }
 
   .nav-toggle { position: absolute; opacity: 0; pointer-events: none; }
-  .nav-button { cursor: pointer; font-weight: 700; padding: 6px 16px; border: 2px solid var(--ink); border-radius: 999px; user-select: none; }
-  .nav-toggle:focus-visible + .nav-button { outline: 3px solid var(--bunt-4); outline-offset: 2px; }
-  .mobile-nav nav { display: none; position: absolute; left: 0; right: 0; top: 100%; background: var(--paper); border-bottom: 1px solid var(--line); padding: 8px 16px 18px; }
+  .nav-button { cursor: pointer; font-weight: 700; padding: 6px 16px; border: 2px solid var(--fg); border-radius: 999px; user-select: none; }
+  .nav-toggle:focus-visible + .nav-button { outline: 3px solid var(--link); outline-offset: 2px; }
+  .mobile-nav nav { display: none; position: absolute; left: 0; right: 0; top: 100%; background: var(--bg); border-bottom: 1px solid var(--line); padding: 8px 16px 18px; }
   .mobile-nav ul { list-style: none; margin: 0; padding: 0; }
   .mobile-nav li ul { padding-left: 16px; }
-  .mobile-nav a { display: block; padding: 8px 0; color: var(--ink); text-decoration: none; font-weight: 600; }
-  .mobile-nav a.active { color: var(--accent); }
+  .mobile-nav a { display: block; padding: 8px 0; color: var(--fg); text-decoration: none; font-weight: 600; }
+  .mobile-nav a.active { color: var(--link); }
   .nav-toggle:checked ~ nav { display: block; }
 
   @media (min-width: 900px) {
@@ -103,23 +103,23 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWit
     .mobile-nav > nav > ul { display: flex; gap: 4px; }
     .mobile-nav > nav > ul > li { position: relative; }
     .mobile-nav > nav > ul > li > a { padding: 8px 12px; border-radius: 999px; }
-    .mobile-nav > nav > ul > li > a:hover, .mobile-nav a.active { background: var(--ink); color: #fff; }
+    .mobile-nav > nav > ul > li > a:hover, .mobile-nav a.active { background: var(--wine); color: var(--fg); }
     .has-children > ul {
       display: none; position: absolute; top: 100%; left: 0; min-width: 230px;
-      background: var(--card); border: 1px solid var(--line); border-radius: 12px;
-      padding: 8px !important; box-shadow: 0 12px 28px rgba(20,22,31,.1);
+      background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+      padding: 8px !important; box-shadow: 0 12px 28px rgba(0,0,0,.5);
     }
     .has-children:hover > ul, .has-children:focus-within > ul { display: block; }
     .has-children > ul a { padding: 8px 10px; border-radius: 8px; }
-    .has-children > ul a:hover { background: var(--paper); }
-    .has-children > ul a.active { background: none; color: var(--accent); }
+    .has-children > ul a:hover { background: var(--surface-2); }
+    .has-children > ul a.active { background: none; color: var(--link); }
   }
 
-  .site-footer { margin-top: 64px; background: var(--ink); color: #fff; }
+  .site-footer { margin-top: 64px; background: var(--surface); color: var(--fg); border-top: 1px solid var(--line); }
   .foot { display: grid; gap: 18px; padding-top: 36px; padding-bottom: 36px; }
   .foot ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 18px; }
-  .foot a { color: #fff; }
-  .foot a:hover { color: var(--bunt-2); }
+  .foot a { color: var(--link); }
+  .foot a:hover { color: var(--fg); }
   .copy { opacity: .6; font-size: .9rem; }
   @media (min-width: 720px) { .foot { grid-template-columns: 1fr auto; } .copy { grid-column: 1 / -1; } }
 </style>
