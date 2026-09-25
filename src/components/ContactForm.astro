@@ -6,12 +6,14 @@ interface Props {
   subjects?: string[];
   submitLabel?: string;
   showMessage?: boolean;
+  art?: 'kontakt' | 'team';
 }
 const {
   subject,
   subjects = ['Allgemeine Anfrage', 'Mitgliedschaft', 'BUNTE Liga', 'St. Pieschen', 'Lesung „Freunde“'],
   submitLabel = 'Absenden',
   showMessage = true,
+  art = 'kontakt',
 } = Astro.props;
 const accessKey = import.meta.env.PUBLIC_WEB3FORMS_KEY ?? '';
 ---
@@ -19,8 +21,15 @@ const accessKey = import.meta.env.PUBLIC_WEB3FORMS_KEY ?? '';
   <input type="hidden" name="access_key" value={accessKey} />
   <input type="hidden" name="from_name" value="newtownunited.de" />
   <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" />
-  <label>Name<input name="name" required autocomplete="name" /></label>
+  {art === 'team' && <label>Teamname<input name="teamname" required /></label>}
+  <label>{art === 'team' ? 'Ansprechperson' : 'Name'}<input name="name" required autocomplete="name" /></label>
   <label>E-Mail<input type="email" name="email" required autocomplete="email" /></label>
+  {art === 'team' && (
+    <div class="zwei">
+      <label>Telefon (optional)<input type="tel" name="telefon" autocomplete="tel" /></label>
+      <label>Anzahl Spieler:innen (ca.)<input type="number" name="anzahl_spielerinnen" min="1" max="40" inputmode="numeric" /></label>
+    </div>
+  )}
   {subject ? (
     <input type="hidden" name="subject" value={subject} />
   ) : (
@@ -28,7 +37,7 @@ const accessKey = import.meta.env.PUBLIC_WEB3FORMS_KEY ?? '';
       <select name="subject">{subjects.map((s) => <option>{s}</option>)}</select>
     </label>
   )}
-  {showMessage && <label>Nachricht<textarea name="message" rows="5" required></textarea></label>}
+  {showMessage && <label>{art === 'team' ? 'Nachricht (optional)' : 'Nachricht'}<textarea name="message" rows="5" required={art !== 'team'}></textarea></label>}
   <label class="consent">
     <input type="checkbox" required />
     <span>Ich bin einverstanden, dass meine Angaben zur Bearbeitung der Anfrage gespeichert werden. Mehr dazu in der <a href="/impressum/#datenschutz">Datenschutzerklärung</a>.</span>
@@ -44,5 +53,6 @@ const accessKey = import.meta.env.PUBLIC_WEB3FORMS_KEY ?? '';
   .consent { grid-template-columns: auto 1fr; align-items: start; font-weight: 400; font-size: .92rem; }
   .consent input { margin-top: 4px; accent-color: var(--rot); }
   .hp { display: none; }
+  .zwei { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
   button { justify-self: start; }
 </style>

@@ -95,7 +95,7 @@ const formular = d.formular.discriminant ? d.formular.value : null;
           {formular.ueberschrift && <h2>{formular.ueberschrift}</h2>}
           {formular.text && <p>{formular.text}</p>}
         </div>
-        <ContactForm subject={formular.betreff || d.titel} submitLabel={formular.buttonText || 'Nachricht senden'} />
+        <ContactForm subject={formular.betreff || d.titel} submitLabel={formular.buttonText || 'Nachricht senden'} art={formular.art} />
       </div>
     </section>
   )}

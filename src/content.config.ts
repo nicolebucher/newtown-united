@@ -37,8 +37,8 @@ const seiten = defineCollection({
         z.object({
           discriminant: z.literal(true),
           value: z.object({
-            titelLogo: z.string().nullish(),
-    ueberschrift: z.string().nullish(),
+            art: z.enum(['kontakt', 'team']).default('kontakt'),
+            ueberschrift: z.string().nullish(),
             text: z.string().nullish(),
             betreff: z.string().nullish(),
             buttonText: z.string().nullish(),

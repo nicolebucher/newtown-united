@@ -129,6 +129,14 @@ export default config({
           fields.checkbox({ label: 'Kontaktformular anzeigen', defaultValue: false }),
           {
             true: fields.object({
+              art: fields.select({
+                label: 'Art des Formulars',
+                options: [
+                  { label: 'Kontakt (Name, E-Mail, Nachricht)', value: 'kontakt' },
+                  { label: 'Team-Anmeldung (mit Teamname, Telefon, Anzahl Spieler:innen)', value: 'team' },
+                ],
+                defaultValue: 'kontakt',
+              }),
               ueberschrift: fields.text({ label: 'Überschrift', defaultValue: 'Schreib uns' }),
               text: fields.text({ label: 'Text über dem Formular', multiline: true }),
               betreff: fields.text({ label: 'Betreff der E-Mail' }),
