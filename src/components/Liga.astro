@@ -1,0 +1,56 @@
+---
+import { liga } from '../lib/einstellungen';
+
+const heute = new Date().toISOString().slice(0, 10);
+const datum = (iso: string) =>
+  new Date(iso + 'T12:00:00').toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+const zahlen = [
+  { wert: liga.teams, text: 'aktive Teams' },
+  { wert: liga.spieler, text: 'Spieler:innen' },
+  { wert: liga.spiele, text: 'Spiele gespielt' },
+  { wert: liga.tore, text: 'Tore' },
+].filter((z) => z.wert != null);
+const spieltage = [...(liga.spieltage ?? [])].sort((a, b) => a.datum.localeCompare(b.datum));
+---
+{zahlen.length > 0 && (
+  <section class="section wrap">
+    <h2>Saison {liga.saison} in Zahlen</h2>
+    <div class="stats">
+      {zahlen.map((z) => <div class="stat"><b>{z.wert}</b><span>{z.text}</span></div>)}
+    </div>
+  </section>
+)}
+
+{spieltage.length > 0 && (
+  <section class="section wrap">
+    <h2>Spieltage {liga.saison}</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Spieltag</th><th>Datum</th><th>Uhrzeit</th><th>Ort</th></tr></thead>
+        <tbody>
+          {spieltage.map((s, i) => (
+            <tr data-date={s.datum} class={s.datum < heute ? 'past' : ''}>
+              <td>{i + 1}.</td><td>{datum(s.datum)}</td><td>{s.uhrzeit}</td><td>{s.ort}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </section>
+)}
+
+{liga.partner?.length > 0 && (
+  <section class="section wrap prose">
+    <h2>Gemeinsam organisiert</h2>
+    <p>Die BUNTE Liga wird unterstützt von diesen Partnern und richtet sich an Teams aus Dresden und Umgebung:</p>
+    <ul>{liga.partner.map((p) => <li>{p}</li>)}</ul>
+  </section>
+)}
+
+<script>
+  // Vergangene Spieltage im Browser ausgrauen, damit die Tabelle ohne neuen Build aktuell bleibt.
+  const heute = new Date().toISOString().slice(0, 10);
+  document.querySelectorAll<HTMLTableRowElement>('tr[data-date]').forEach((zeile) => {
+    zeile.classList.toggle('past', (zeile.dataset.date ?? '') < heute);
+  });
+</script>

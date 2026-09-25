@@ -2,8 +2,11 @@
 import '@fontsource-variable/archivo';
 import '@fontsource/archivo-black';
 import '../styles/global.css';
-import { navigation } from '../data/navigation';
-import { site } from '../data/site';
+import { navigation as ladeNavigation } from '../lib/seiten';
+import { verein } from '../lib/einstellungen';
+
+const navigation = await ladeNavigation();
+const site = { name: verein.name || 'Newtown United e.V.' };
 
 interface Props {
   title?: string;
@@ -29,11 +32,11 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWit
     <meta property="og:type" content="website" />
   </head>
   <body>
-    <div class="wine-rule"></div>
+    <div class="rot-linie"></div>
     <header class="site-header">
       <div class="wrap bar">
         <a class="brand" href="/">
-          <img src="/images/logo.png" alt="" width="44" height="44" onerror="this.style.display='none'" />
+          {verein.logo && <img src={verein.logo} alt="" width="44" height="44" />}
           <span>Newtown United <small>e.V.</small></span>
         </a>
         <div class="mobile-nav">
@@ -42,9 +45,9 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWit
           <nav aria-label="Hauptmenü">
             <ul>
               {navigation.map((item) => (
-                <li class={item.children ? 'has-children' : ''}>
+                <li class={item.children.length > 0 ? 'has-children' : ''}>
                   <a href={item.href} class={isActive(item.href) ? 'active' : ''}>{item.label}</a>
-                  {item.children && (
+                  {item.children.length > 0 && (
                     <ul>
                       {item.children.map((child) => (
                         <li><a href={child.href} class={isActive(child.href) ? 'active' : ''}>{child.label}</a></li>
@@ -67,16 +70,16 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWit
       <div class="wrap foot">
         <div>
           <strong>{site.name}</strong><br />
-          Sport- und Kulturverein aus {site.city}
+          {verein.untertitel}
         </div>
         <ul>
-          <li><a href={site.instagram} rel="noopener">Instagram</a></li>
+          {verein.instagram && <li><a href={verein.instagram} rel="noopener">Instagram</a></li>}
           <li><a href="/impressum/">Impressum</a></li>
           <li><a href="/impressum/#datenschutz">Datenschutz</a></li>
         </ul>
         <div class="copy">© {new Date().getFullYear()} {site.name}</div>
       </div>
-      <div class="wine-rule"></div>
+      <div class="rot-linie"></div>
     </footer>
   </body>
 </html>
@@ -103,7 +106,7 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWit
     .mobile-nav > nav > ul { display: flex; gap: 4px; }
     .mobile-nav > nav > ul > li { position: relative; }
     .mobile-nav > nav > ul > li > a { padding: 8px 12px; border-radius: 999px; }
-    .mobile-nav > nav > ul > li > a:hover, .mobile-nav a.active { background: var(--wine); color: var(--fg); }
+    .mobile-nav > nav > ul > li > a:hover, .mobile-nav a.active { background: var(--rot); color: var(--fg); }
     .has-children > ul {
       display: none; position: absolute; top: 100%; left: 0; min-width: 230px;
       background: var(--surface); border: 1px solid var(--line); border-radius: 12px;

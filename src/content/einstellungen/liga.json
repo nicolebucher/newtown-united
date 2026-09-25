@@ -1,0 +1,46 @@
+{
+  "saison": "2026",
+  "teams": 9,
+  "spieler": 106,
+  "spiele": 36,
+  "tore": 164,
+  "spieltage": [
+    {
+      "datum": "2026-03-17",
+      "uhrzeit": "18:00–21:00",
+      "ort": "Teplitzer Str. 17"
+    },
+    {
+      "datum": "2026-04-29",
+      "uhrzeit": "18:00–21:00",
+      "ort": "Nachtflügelweg 36"
+    },
+    {
+      "datum": "2026-05-27",
+      "uhrzeit": "18:00–21:00",
+      "ort": "Nachtflügelweg 36"
+    },
+    {
+      "datum": "2026-08-25",
+      "uhrzeit": "17:30–21:00",
+      "ort": "Teplitzer Str. 17"
+    },
+    {
+      "datum": "2026-09-08",
+      "uhrzeit": "17:30–21:00",
+      "ort": "Teplitzer Str. 17"
+    },
+    {
+      "datum": "2026-10-06",
+      "uhrzeit": "17:30–21:00",
+      "ort": "Teplitzer Str. 17"
+    }
+  ],
+  "partner": [
+    "Lebenshilfe Dresden",
+    "Meniskus Dresden",
+    "Partizan Dresden",
+    "Torpedo Hecht"
+  ],
+  "spielplanLink": "https://free-tournament.com/de/liga/l873631"
+}

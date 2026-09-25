@@ -9,8 +9,15 @@
     "preview": "astro preview"
   },
   "dependencies": {
+    "@astrojs/markdoc": "^2.0.9",
+    "@astrojs/react": "^7.0.0",
+    "@astrojs/vercel": "^11.0.11",
     "@fontsource-variable/archivo": "^5.3.0",
     "@fontsource/archivo-black": "^5.3.0",
-    "astro": "^7.3.5"
+    "@keystatic/astro": "^6.0.0",
+    "@keystatic/core": "^0.6.9",
+    "astro": "^7.3.5",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
   }
 }

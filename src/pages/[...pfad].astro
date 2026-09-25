@@ -1,0 +1,98 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import ContactForm from '../components/ContactForm.astro';
+import Liga from '../components/Liga.astro';
+import { seitenUrl, oeffentlicheDateiExistiert, type Seite } from '../lib/seiten';
+
+export async function getStaticPaths() {
+  const seiten = await getCollection('seiten');
+  return seiten.map((seite) => ({
+    params: { pfad: seitenUrl(seite).replace(/^\/|\/$/g, '') || undefined },
+    props: { seite, alle: seiten },
+  }));
+}
+
+interface Props { seite: Seite; alle: Seite[] }
+const { seite, alle } = Astro.props;
+const d = seite.data;
+const { Content } = await render(seite);
+
+const istStart = seite.id === 'start';
+const bild = oeffentlicheDateiExistiert(d.bild) ? d.bild : null;
+const buttons = d.buttons
+  .map((b) => ({ ...b, href: b.datei || b.link || '' }))
+  .filter((b) => b.href);
+const karten = d.karten
+  .map((id) => alle.find((s) => s.id === id))
+  .filter((s): s is Seite => Boolean(s));
+const formular = d.formular.discriminant ? d.formular.value : null;
+---
+<Base title={istStart ? undefined : d.titel} description={d.kurzbeschreibung ?? undefined}>
+  <section class="hero wrap">
+    <div class:list={[{ split: bild }]}>
+      <div>
+        {d.kicker && <span class="kicker">{d.kicker}</span>}
+        <h1>{d.ueberschrift || d.titel}</h1>
+        {d.einleitung && <p class="lead">{d.einleitung}</p>}
+        {buttons.length > 0 && (
+          <div class="btn-row">
+            {buttons.map((b) => (
+              <a class:list={['btn', { ghost: !b.hauptbutton }]} href={b.href} rel={b.href.startsWith('http') ? 'noopener' : undefined}>{b.text}</a>
+            ))}
+          </div>
+        )}
+        {d.infos.length > 0 && !bild && (
+          <div class="info-box"><dl>{d.infos.map((i) => <><dt>{i.bezeichnung}</dt><dd>{i.wert}</dd></>)}</dl></div>
+        )}
+      </div>
+      {bild && (
+        <div class="hero-media">
+          <img src={bild} alt={d.bildText ?? ''} class="hero-img" />
+          {d.infos.length > 0 && (
+            <div class="info-box"><dl>{d.infos.map((i) => <><dt>{i.bezeichnung}</dt><dd>{i.wert}</dd></>)}</dl></div>
+          )}
+        </div>
+      )}
+    </div>
+  </section>
+
+  <section class="section wrap prose inhalt">
+    <Content />
+  </section>
+
+  {karten.length > 0 && (
+    <section class="section wrap">
+      <div class="cards">
+        {karten.map((k) => (
+          <a class="card" href={seitenUrl(k)}>
+            <h3>{k.data.titel}</h3>
+            {k.data.kurzbeschreibung && <p>{k.data.kurzbeschreibung}</p>}
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
+
+  {d.ligaAnzeigen && <Liga />}
+
+  {formular && (
+    <section class="section wrap" id="formular">
+      <div class="split">
+        <div class="prose">
+          {formular.ueberschrift && <h2>{formular.ueberschrift}</h2>}
+          {formular.text && <p>{formular.text}</p>}
+        </div>
+        <ContactForm subject={formular.betreff || d.titel} submitLabel={formular.buttonText || 'Nachricht senden'} />
+      </div>
+    </section>
+  )}
+</Base>
+
+<style>
+  .hero-media { display: grid; gap: 18px; }
+  .hero-img { border-radius: var(--radius); width: 100%; }
+  .inhalt:empty { display: none; }
+  .inhalt :global(h2:first-child) { margin-top: 0; }
+  .inhalt :global(img) { border-radius: var(--radius); margin: 1em 0; }
+</style>
