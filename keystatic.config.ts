@@ -8,7 +8,7 @@ const storage = import.meta.env.PROD
 
 export default config({
   storage,
-  cloud: { project: 'newtown-united/website' },
+  cloud: { project: 'newtown-united/newtown-united' },
   locale: 'de-DE',
   ui: {
     brand: { name: 'Newtown United' },
