@@ -1,0 +1,36 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../data/site';
+---
+<Base title="Impressum">
+  <section class="hero wrap prose">
+    <h1>Impressum</h1>
+
+    <div class="info-box">
+      <dl>
+        <dt>Verein</dt><dd>{site.name}</dd>
+        <dt>Vereinsregister</dt><dd>VR 14871</dd>
+        <dt>E-Mail</dt><dd><a href={`mailto:${site.email}`}>{site.email}</a></dd>
+        <dt>Anschrift</dt>
+        <dd>{site.name}<br />c/o Sebastian Seidel<br />Bürgerstr. 29<br />01127 Dresden</dd>
+        <dt>Inhaltlich verantwortlich</dt><dd>Sebastian Seidel (Anschrift wie oben)</dd>
+      </dl>
+    </div>
+
+    <h2>Haftung für Inhalte</h2>
+    <p>
+      Die Inhalte unserer Seiten wurden mit größter Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit
+      und Aktualität der Inhalte können wir jedoch keine Gewähr übernehmen.
+    </p>
+
+    <h2>Haftung für Links</h2>
+    <p>
+      Unsere Webseite enthält Links zu externen Webseiten Dritter, auf deren Inhalte wir keinen Einfluss haben.
+      Deshalb können wir für diese fremden Inhalte keine Gewähr übernehmen.
+    </p>
+
+    <h2 id="datenschutz">Datenschutz</h2>
+    <p>Unsere Datenschutzerklärung kannst du hier als PDF herunterladen:</p>
+    <p><a class="btn" href="/downloads/Datenschutzerklaerung.pdf">Datenschutzerklärung (PDF)</a></p>
+  </section>
+</Base>

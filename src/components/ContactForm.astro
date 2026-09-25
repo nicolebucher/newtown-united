@@ -1,0 +1,48 @@
+---
+// Formular läuft über Web3Forms (https://web3forms.com), Nachrichten kommen per E-Mail.
+// Den Zugangsschlüssel als PUBLIC_WEB3FORMS_KEY in Vercel eintragen.
+interface Props {
+  subject?: string;
+  subjects?: string[];
+  submitLabel?: string;
+  showMessage?: boolean;
+}
+const {
+  subject,
+  subjects = ['Allgemeine Anfrage', 'Mitgliedschaft', 'BUNTE Liga', 'Blind Kick', 'Lesung „Freunde“'],
+  submitLabel = 'Absenden',
+  showMessage = true,
+} = Astro.props;
+const accessKey = import.meta.env.PUBLIC_WEB3FORMS_KEY ?? '';
+---
+<form class="contact-form" action="https://api.web3forms.com/submit" method="POST">
+  <input type="hidden" name="access_key" value={accessKey} />
+  <input type="hidden" name="from_name" value="newtownunited.de" />
+  <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" />
+  <label>Name<input name="name" required autocomplete="name" /></label>
+  <label>E-Mail<input type="email" name="email" required autocomplete="email" /></label>
+  {subject ? (
+    <input type="hidden" name="subject" value={subject} />
+  ) : (
+    <label>Betreff
+      <select name="subject">{subjects.map((s) => <option>{s}</option>)}</select>
+    </label>
+  )}
+  {showMessage && <label>Nachricht<textarea name="message" rows="5" required></textarea></label>}
+  <label class="consent">
+    <input type="checkbox" required />
+    <span>Ich bin einverstanden, dass meine Angaben zur Bearbeitung der Anfrage gespeichert werden. Mehr dazu in der <a href="/impressum/#datenschutz">Datenschutzerklärung</a>.</span>
+  </label>
+  <button class="btn" type="submit">{submitLabel}</button>
+</form>
+
+<style>
+  .contact-form { display: grid; gap: 14px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; max-width: 560px; }
+  label { display: grid; gap: 6px; font-weight: 600; }
+  input, select, textarea { font: inherit; padding: 10px 12px; border: 1.5px solid var(--line); border-radius: 10px; background: #fff; }
+  input:focus, select:focus, textarea:focus { outline: none; border-color: var(--bunt-4); }
+  .consent { grid-template-columns: auto 1fr; align-items: start; font-weight: 400; font-size: .92rem; }
+  .consent input { margin-top: 4px; }
+  .hp { display: none; }
+  button { justify-self: start; }
+</style>

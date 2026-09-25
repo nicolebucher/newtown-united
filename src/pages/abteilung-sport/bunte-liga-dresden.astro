@@ -1,0 +1,78 @@
+---
+import Base from '../../layouts/Base.astro';
+import liga from '../../data/liga.json';
+import Picture from '../../components/Picture.astro';
+
+const today = new Date().toISOString().slice(0, 10);
+const fmt = (iso: string) => new Date(iso + 'T12:00:00').toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+const stats = [
+  { value: liga.stats.teams, label: 'aktive Teams' },
+  { value: liga.stats.players, label: 'Spieler:innen' },
+  { value: liga.stats.matches, label: 'Spiele gespielt' },
+  { value: liga.stats.goals, label: 'Tore' },
+];
+---
+<Base title="BUNTE Liga Dresden" description="Die BUNTE Liga Dresden: inklusiver Freizeitfußball für Dresden und Umgebung – verbindend, fair und ohne Leistungsdruck.">
+  <section class="hero wrap">
+    <span class="kicker">Abteilung Sport</span>
+    <h1>BUNTE Liga Dresden</h1>
+    <p class="lead">
+      Eine inklusive Freizeitliga für alle Menschen: regelmäßig gemeinsam spielen, ohne starken Wettbewerbsdruck,
+      dafür mit Spaß, Fairness und gegenseitigem Respekt im Fokus.
+    </p>
+    <div class="btn-row">
+      <a class="btn" href={liga.links.schedule} rel="noopener">Kompletter Spielplan</a>
+      <a class="btn ghost" href={liga.links.rules}>Regelwerk (PDF)</a>
+      <a class="btn ghost" href="https://www.instagram.com/newtown_united_fc/" rel="noopener">Mitmachen über Instagram</a>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <Picture src="/images/bunte-liga-banner.jpg" alt="Spieltag der BUNTEN Liga" ratio="1024 / 369" />
+  </section>
+
+  <section class="section wrap prose">
+    <h2>Unsere Idee</h2>
+    <p>
+      Fußball soll verbinden – unabhängig davon, ob jemand in einem Verein aktiv ist, welche Erfahrungen vorhanden
+      sind oder welche unterschiedlichen Fähigkeiten und Bedürfnisse jemand hat. Die Liga funktioniert inklusiv,
+      transparent und partizipativ: Alle Teams entscheiden mit.
+    </p>
+  </section>
+
+  <section class="section wrap">
+    <h2>Saison {liga.season} in Zahlen</h2>
+    <div class="stats">
+      {stats.map((s) => <div class="stat"><b>{s.value}</b><span>{s.label}</span></div>)}
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <h2>Spieltage {liga.season}</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Spieltag</th><th>Datum</th><th>Uhrzeit</th><th>Ort</th></tr></thead>
+        <tbody>
+          {liga.matchdays.map((m) => (
+            <tr data-date={m.date} class={m.date < today ? 'past' : ''}>
+              <td>{m.nr}.</td><td>{fmt(m.date)}</td><td>{m.time}</td><td>{m.location}, Dresden</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="section wrap prose">
+    <h2>Gemeinsam organisiert</h2>
+    <p>Die BUNTE Liga wird unterstützt von diesen Partnern und richtet sich an Teams aus Dresden und Umgebung:</p>
+    <ul>{liga.partners.map((p) => <li>{p}</li>)}</ul>
+  </section>
+</Base>
+
+<script>
+  const today = new Date().toISOString().slice(0, 10);
+  document.querySelectorAll<HTMLTableRowElement>('tr[data-date]').forEach((row) => {
+    row.classList.toggle('past', (row.dataset.date ?? '') < today);
+  });
+</script>

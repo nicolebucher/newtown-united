@@ -1,0 +1,17 @@
+{
+  "season": 2026,
+  "stats": { "teams": 9, "players": 106, "matches": 36, "goals": 164 },
+  "matchdays": [
+    { "nr": 1, "date": "2026-03-17", "time": "18:00–21:00", "location": "Teplitzer Str. 17" },
+    { "nr": 2, "date": "2026-04-29", "time": "18:00–21:00", "location": "Nachtflügelweg 36" },
+    { "nr": 3, "date": "2026-05-27", "time": "18:00–21:00", "location": "Nachtflügelweg 36" },
+    { "nr": 4, "date": "2026-08-25", "time": "17:30–21:00", "location": "Teplitzer Str. 17" },
+    { "nr": 5, "date": "2026-09-08", "time": "17:30–21:00", "location": "Teplitzer Str. 17" },
+    { "nr": 6, "date": "2026-10-06", "time": "17:30–21:00", "location": "Teplitzer Str. 17" }
+  ],
+  "partners": ["Lebenshilfe Dresden", "Meniskus Dresden", "Partizan Dresden", "Torpedo Hecht"],
+  "links": {
+    "schedule": "https://free-tournament.com/de/liga/l873631",
+    "rules": "/downloads/Regelwerk-BUNTE-Liga-DD-20260330.pdf"
+  }
+}
