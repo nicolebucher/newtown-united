@@ -54,6 +54,12 @@ export default config({
           defaultValue: 10,
         }),
         kicker: fields.text({ label: 'Kleine Überschrift über dem Titel' }),
+        titelLogo: fields.image({
+          label: 'Logo als Hauptüberschrift',
+          description: 'Wenn gesetzt, steht das Logo ganz oben und der Titel darunter als zweite Überschrift.',
+          directory: 'public/images',
+          publicPath: '/images/',
+        }),
         ueberschrift: fields.text({
           label: 'Große Überschrift',
           description: 'Leer lassen, dann wird der Titel verwendet.',

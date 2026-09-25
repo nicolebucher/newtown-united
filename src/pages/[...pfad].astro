@@ -21,6 +21,7 @@ const { Content } = await render(seite);
 
 const istStart = seite.id === 'start';
 const bild = oeffentlicheDateiExistiert(d.bild) ? d.bild : null;
+const titelLogo = oeffentlicheDateiExistiert(d.titelLogo) ? d.titelLogo : null;
 const buttons = d.buttons
   .map((b) => ({ ...b, href: b.datei || b.link || '' }))
   .filter((b) => b.href);
@@ -33,8 +34,16 @@ const formular = d.formular.discriminant ? d.formular.value : null;
   <section class="hero wrap">
     <div class:list={[{ split: bild }]}>
       <div>
-        {d.kicker && <span class="kicker">{d.kicker}</span>}
-        <h1>{d.ueberschrift || d.titel}</h1>
+        {d.kicker && !titelLogo && <span class="kicker">{d.kicker}</span>}
+        {titelLogo ? (
+          <>
+            <h1 class="titel-logo"><img src={titelLogo} alt={d.ueberschrift || d.titel} /></h1>
+            <h2 class="titel-unter">{d.ueberschrift || d.titel}</h2>
+            {d.kicker && <span class="kicker">{d.kicker}</span>}
+          </>
+        ) : (
+          <h1>{d.ueberschrift || d.titel}</h1>
+        )}
         {d.einleitung && <p class="lead">{d.einleitung}</p>}
         {buttons.length > 0 && (
           <div class="btn-row">
@@ -94,6 +103,9 @@ const formular = d.formular.discriminant ? d.formular.value : null;
 
 <style>
   .hero-media { display: grid; gap: 18px; }
+  .titel-logo { margin: 0 0 0.4em; line-height: 0; }
+  .titel-logo img { width: clamp(120px, 22vw, 190px); height: auto; }
+  .titel-unter { margin-top: 0; font-size: clamp(1.8rem, 4.5vw, 2.8rem); }
   .hero-img { border-radius: var(--radius); width: 100%; }
   .inhalt:empty { display: none; }
   .inhalt :global(h2:first-child) { margin-top: 0; }

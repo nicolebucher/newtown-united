@@ -10,6 +10,7 @@ const seiten = defineCollection({
     imMenue: z.boolean().default(true),
     reihenfolge: z.number().nullish(),
     kicker: z.string().nullish(),
+    titelLogo: z.string().nullish(),
     ueberschrift: z.string().nullish(),
     einleitung: z.string().nullish(),
     kurzbeschreibung: z.string().nullish(),
@@ -36,7 +37,8 @@ const seiten = defineCollection({
         z.object({
           discriminant: z.literal(true),
           value: z.object({
-            ueberschrift: z.string().nullish(),
+            titelLogo: z.string().nullish(),
+    ueberschrift: z.string().nullish(),
             text: z.string().nullish(),
             betreff: z.string().nullish(),
             buttonText: z.string().nullish(),
