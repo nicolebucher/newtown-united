@@ -109,5 +109,7 @@ const formular = d.formular.discriminant ? d.formular.value : null;
   .hero-img { border-radius: var(--radius); width: 100%; }
   .inhalt:empty { display: none; }
   .inhalt :global(h2:first-child) { margin-top: 0; }
+  .inhalt :global(p:has(> img + img)) { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); max-width: none; }
+  .inhalt :global(p:has(> img + img) img) { margin: 0; max-width: 100%; background: #fff; box-shadow: 0 10px 30px rgba(0,0,0,.5); }
   .inhalt :global(img) { border-radius: var(--radius); margin: 1em 0; width: 100%; max-width: 560px; max-height: 80vh; object-fit: contain; object-position: left; }
 </style>
