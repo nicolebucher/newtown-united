@@ -13,7 +13,7 @@ export default config({
   ui: {
     brand: { name: 'Newtown United' },
     navigation: {
-      Inhalte: ['seiten'],
+      Website: ['seiten', 'menue'],
       Einstellungen: ['liga', 'verein'],
     },
   },
@@ -23,138 +23,190 @@ export default config({
       slugField: 'titel',
       path: 'src/content/seiten/*',
       format: { contentField: 'inhalt' },
-      entryLayout: 'content',
-      columns: ['titel', 'bereich'],
+      columns: ['titel'],
       schema: {
         titel: fields.slug({
-          name: { label: 'Titel', validation: { isRequired: true } },
+          name: {
+            label: 'Seitenname',
+            description: 'So heißt die Seite im Menü und im Browser-Tab.',
+            validation: { isRequired: true },
+          },
           slug: {
             label: 'Adresse der Seite',
-            description: 'Wird Teil der Webadresse. Die Startseite heißt „start“.',
+            description: 'Wird Teil der Webadresse. Nach dem Veröffentlichen besser nicht mehr ändern. Die Startseite heißt „start“.',
           },
         }),
-        bereich: fields.select({
-          label: 'Bereich',
-          description: 'Legt fest, unter welchem Menüpunkt die Seite erscheint.',
-          options: [
-            { label: 'Eigene Seite (oberste Ebene)', value: 'keiner' },
-            { label: 'Abteilung Sport', value: 'abteilung-sport' },
-            { label: 'Portfolio', value: 'portfolio' },
-          ],
-          defaultValue: 'keiner',
-        }),
-        imMenue: fields.checkbox({
-          label: 'Im Menü anzeigen',
-          description: 'Unterseiten von Abteilung Sport und Portfolio erscheinen dort als Untermenü.',
-          defaultValue: true,
-        }),
-        reihenfolge: fields.integer({
-          label: 'Reihenfolge',
-          description: 'Kleinere Zahlen stehen im Menü und in Übersichten weiter vorne.',
-          defaultValue: 10,
-        }),
-        kicker: fields.text({ label: 'Kleine Überschrift über dem Titel' }),
-        titelLogo: fields.image({
-          label: 'Logo als Hauptüberschrift',
-          description: 'Wenn gesetzt, steht das Logo ganz oben und der Titel darunter als zweite Überschrift.',
-          directory: 'public/images',
-          publicPath: '/images/',
-        }),
-        ueberschrift: fields.text({
-          label: 'Große Überschrift',
-          description: 'Leer lassen, dann wird der Titel verwendet.',
-        }),
-        einleitung: fields.text({ label: 'Einleitung', multiline: true }),
-        kurzbeschreibung: fields.text({
-          label: 'Kurzbeschreibung',
-          description: 'Erscheint auf Karten in Übersichten und in Suchmaschinen.',
-          multiline: true,
-        }),
-        bild: fields.image({
-          label: 'Bild oben',
-          directory: 'public/images/seiten',
-          publicPath: '/images/seiten/',
-        }),
-        bildText: fields.text({ label: 'Bildbeschreibung (für Screenreader)' }),
-        buttons: fields.array(
-          fields.object({
-            text: fields.text({ label: 'Beschriftung', validation: { isRequired: true } }),
-            link: fields.text({ label: 'Link', description: 'Webadresse oder z. B. #formular' }),
-            datei: fields.file({
-              label: 'Oder: Datei (z. B. PDF)',
-              directory: 'public/downloads',
-              publicPath: '/downloads/',
+
+        kopf: fields.object(
+          {
+            ueberschrift: fields.text({
+              label: 'Hauptüberschrift (H1)',
+              description: 'Die große Überschrift ganz oben. Leer lassen, dann steht dort der Seitenname.',
             }),
-            hauptbutton: fields.checkbox({ label: 'Roter Hauptbutton', defaultValue: true }),
-          }),
-          { label: 'Buttons', itemLabel: (p) => p.fields.text.value || 'Button' },
-        ),
-        infos: fields.array(
-          fields.object({
-            bezeichnung: fields.text({ label: 'Bezeichnung', description: 'z. B. Wann, Wo, Eintritt' }),
-            wert: fields.text({ label: 'Wert' }),
-          }),
-          {
-            label: 'Infokasten',
-            description: 'Kurze Eckdaten wie Datum, Ort oder Eintritt.',
-            itemLabel: (p) => `${p.fields.bezeichnung.value}: ${p.fields.wert.value}`,
-          },
-        ),
-        downloads: fields.array(
-          fields.object({
-            titel: fields.text({ label: 'Titel', validation: { isRequired: true } }),
-            beschreibung: fields.text({ label: 'Kurzer Text', multiline: true }),
-            datei: fields.file({
-              label: 'Datei (z. B. PDF)',
-              directory: 'public/downloads',
-              publicPath: '/downloads/',
+            kicker: fields.text({
+              label: 'Kleine Zeile über der Überschrift',
+              description: 'Zum Beispiel „Abteilung Sport“. Kann leer bleiben.',
             }),
-          }),
-          {
-            label: 'Download-Kacheln',
-            description: 'Dateien wie Mitgliedsantrag oder Regelwerk als Kachel zum Herunterladen.',
-            itemLabel: (p) => p.fields.titel.value || 'Download',
-          },
-        ),
-        karten: fields.array(fields.relationship({ label: 'Seite', collection: 'seiten' }), {
-          label: 'Karten mit Links zu anderen Seiten',
-          itemLabel: (p) => p.value ?? 'Seite wählen',
-        }),
-        ligaAnzeigen: fields.checkbox({
-          label: 'Zahlen und Spieltage der BUNTEN Liga anzeigen',
-          description: 'Die Daten pflegst du unter Einstellungen → BUNTE Liga.',
-          defaultValue: false,
-        }),
-        formular: fields.conditional(
-          fields.checkbox({ label: 'Kontaktformular anzeigen', defaultValue: false }),
-          {
-            true: fields.object({
-              art: fields.select({
-                label: 'Art des Formulars',
-                options: [
-                  { label: 'Kontakt (Name, E-Mail, Nachricht)', value: 'kontakt' },
-                  { label: 'Team-Anmeldung (mit Teamname, Telefon, Anzahl Spieler:innen)', value: 'team' },
-                ],
-                defaultValue: 'kontakt',
+            einleitung: fields.text({
+              label: 'Einleitung',
+              description: 'Ein, zwei Sätze direkt unter der Überschrift.',
+              multiline: true,
+            }),
+            bild: fields.image({
+              label: 'Bild rechts neben der Überschrift',
+              directory: 'public/images/seiten',
+              publicPath: '/images/seiten/',
+            }),
+            bildText: fields.text({
+              label: 'Was ist auf dem Bild zu sehen?',
+              description: 'Kurze Beschreibung für Menschen, die das Bild nicht sehen können.',
+            }),
+            buttons: fields.array(
+              fields.object({
+                text: fields.text({ label: 'Beschriftung', validation: { isRequired: true } }),
+                link: fields.text({
+                  label: 'Wohin führt der Button?',
+                  description: 'Eine Webadresse, eine Seite wie /mitglied-werden/ oder #formular für das Formular unten.',
+                }),
+                datei: fields.file({
+                  label: 'Oder: Datei zum Herunterladen (z. B. PDF)',
+                  directory: 'public/downloads',
+                  publicPath: '/downloads/',
+                }),
+                hauptbutton: fields.checkbox({
+                  label: 'Roter Button',
+                  description: 'Aus: Der Button ist nur umrandet.',
+                  defaultValue: true,
+                }),
               }),
-              ueberschrift: fields.text({ label: 'Überschrift', defaultValue: 'Schreib uns' }),
-              text: fields.text({ label: 'Text über dem Formular', multiline: true }),
-              betreff: fields.text({ label: 'Betreff der E-Mail' }),
-              buttonText: fields.text({ label: 'Text auf dem Button', defaultValue: 'Nachricht senden' }),
+              { label: 'Buttons', itemLabel: (p) => p.fields.text.value || 'Button' },
+            ),
+            infos: fields.array(
+              fields.object({
+                bezeichnung: fields.text({ label: 'Bezeichnung', description: 'z. B. Wann, Wo, Eintritt' }),
+                wert: fields.text({ label: 'Angabe' }),
+              }),
+              {
+                label: 'Infokasten',
+                description: 'Kurze Eckdaten wie Datum, Ort oder Eintritt.',
+                itemLabel: (p) => `${p.fields.bezeichnung.value}: ${p.fields.wert.value}`,
+              },
+            ),
+            titelLogo: fields.image({
+              label: 'Logo statt Überschrift (nur Startseite)',
+              description: 'Wenn gesetzt, steht das Logo als Hauptüberschrift oben und der Text darunter als zweite Überschrift.',
+              directory: 'public/images',
+              publicPath: '/images/',
             }),
-            false: fields.empty(),
+          },
+          {
+            label: '1. Kopfbereich',
+            description: 'Der obere Teil der Seite: Überschrift, Einleitung, Bild und Buttons.',
           },
         ),
+
         inhalt: fields.markdoc({
-          label: 'Inhalt',
+          label: '2. Hauptteil',
+          description: 'Der eigentliche Text der Seite. Überschriften, fett, Listen, Links und Bilder über die Leiste oben.',
           options: {
             image: { directory: 'public/images/seiten', publicPath: '/images/seiten/' },
           },
+        }),
+
+        extras: fields.object(
+          {
+            karten: fields.array(fields.relationship({ label: 'Seite', collection: 'seiten' }), {
+              label: 'Kacheln mit Links zu anderen Seiten',
+              itemLabel: (p) => p.value ?? 'Seite wählen',
+            }),
+            downloads: fields.array(
+              fields.object({
+                titel: fields.text({ label: 'Titel', validation: { isRequired: true } }),
+                beschreibung: fields.text({ label: 'Kurzer Text', multiline: true }),
+                datei: fields.file({
+                  label: 'Datei (z. B. PDF)',
+                  directory: 'public/downloads',
+                  publicPath: '/downloads/',
+                }),
+              }),
+              {
+                label: 'Dateien zum Herunterladen',
+                description: 'Zum Beispiel Mitgliedsantrag oder Regelwerk, als Kachel.',
+                itemLabel: (p) => p.fields.titel.value || 'Download',
+              },
+            ),
+            ligaAnzeigen: fields.checkbox({
+              label: 'Zahlen und Spieltage der BUNTEN Liga anzeigen',
+              description: 'Die Daten pflegst du unter Einstellungen → BUNTE Liga.',
+              defaultValue: false,
+            }),
+            formular: fields.conditional(
+              fields.checkbox({ label: 'Formular anzeigen', defaultValue: false }),
+              {
+                true: fields.object({
+                  art: fields.select({
+                    label: 'Art des Formulars',
+                    options: [
+                      { label: 'Kontakt (Name, E-Mail, Nachricht)', value: 'kontakt' },
+                      { label: 'Team-Anmeldung (mit Teamname, Telefon, Anzahl Spieler:innen)', value: 'team' },
+                    ],
+                    defaultValue: 'kontakt',
+                  }),
+                  ueberschrift: fields.text({ label: 'Überschrift', defaultValue: 'Schreib uns' }),
+                  text: fields.text({ label: 'Text über dem Formular', multiline: true }),
+                  betreff: fields.text({ label: 'Betreff der E-Mail an euch' }),
+                  buttonText: fields.text({ label: 'Text auf dem Button', defaultValue: 'Nachricht senden' }),
+                }),
+                false: fields.empty(),
+              },
+            ),
+          },
+          {
+            label: '3. Unter dem Hauptteil',
+            description: 'Kacheln, Downloads, Liga-Zahlen und Formular. Alles freiwillig.',
+          },
+        ),
+
+        kurzbeschreibung: fields.text({
+          label: 'Kurzbeschreibung für Kacheln und Google',
+          description: 'Ein Satz. Erscheint, wenn andere Seiten auf diese verlinken, und in Suchergebnissen.',
+          multiline: true,
         }),
       },
     }),
   },
   singletons: {
+    menue: singleton({
+      label: 'Menü',
+      path: 'src/content/einstellungen/menue',
+      format: 'json',
+      schema: {
+        punkte: fields.array(
+          fields.object({
+            seite: fields.relationship({
+              label: 'Seite im Menü',
+              collection: 'seiten',
+              validation: { isRequired: true },
+            }),
+            unterseiten: fields.array(
+              fields.relationship({ label: 'Unterseite', collection: 'seiten', validation: { isRequired: true } }),
+              {
+                label: 'Unterseiten (Kategorie)',
+                description: 'Diese Seiten erscheinen im Aufklappmenü unter dem Menüpunkt, und ihre Adresse beginnt mit ihm.',
+                itemLabel: (p) => p.value ?? 'Seite wählen',
+              },
+            ),
+          }),
+          {
+            label: 'Menüpunkte',
+            description: 'Reihenfolge per Ziehen ändern. Seiten, die hier fehlen, gibt es trotzdem, sie stehen nur nicht im Menü.',
+            itemLabel: (p) =>
+              (p.fields.seite.value ?? 'Seite wählen') +
+              (p.fields.unterseiten.elements.length ? ` (${p.fields.unterseiten.elements.length} Unterseiten)` : ''),
+          },
+        ),
+      },
+    }),
     liga: singleton({
       label: 'BUNTE Liga',
       path: 'src/content/einstellungen/liga',

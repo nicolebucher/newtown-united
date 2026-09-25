@@ -7,8 +7,11 @@ Inhalte werden im Browser mit dem Editor [Keystatic](https://keystatic.com) gepf
 
 Unter **newtownunited.de/keystatic** anmelden und dort bearbeiten:
 
-- **Seiten**: alle Seiten der Website. Neue Seiten (z. B. eine neue Veranstaltung im Portfolio)
-  legst du dort auch an. Über „Bereich“ bestimmst du, unter welchem Menüpunkt sie erscheint.
+- **Seiten**: alle Seiten der Website. Jede Seite hat drei Teile: 1. Kopfbereich (Hauptüberschrift H1,
+  Einleitung, Bild, Buttons), 2. Hauptteil (der eigentliche Text) und 3. was darunter kommt
+  (Kacheln, Downloads, Formular). Neue Seiten legst du hier an.
+- **Menü**: Reihenfolge der Menüpunkte per Ziehen. Eine Seite unter „Unterseiten“ eines Menüpunkts
+  erscheint in dessen Aufklappmenü, zum Beispiel neue Veranstaltungen unter Portfolio.
 - **Einstellungen → BUNTE Liga**: Zahlen, Spieltage, Partner und Regelwerk.
 - **Einstellungen → Verein**: Name, E-Mail, Instagram und Logo.
 

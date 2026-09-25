@@ -1,31 +1,39 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { getCollection, type CollectionEntry } from 'astro:content';
+import menueDaten from '../content/einstellungen/menue.json';
 
 export type Seite = CollectionEntry<'seiten'>;
 
-export function seitenUrl(seite: Seite): string {
-  if (seite.id === 'start') return '/';
-  const { bereich } = seite.data;
-  return bereich === 'keiner' ? `/${seite.id}/` : `/${bereich}/${seite.id}/`;
+type Menue = { punkte: { seite: string | null; unterseiten: (string | null)[] }[] };
+const menue = menueDaten as Menue;
+
+/** Oberseite laut Menü: Unterseiten bekommen deren Adresse als Präfix, z. B. /abteilung-sport/bunte-liga-dresden/. */
+function oberseite(id: string): string | undefined {
+  return menue.punkte.find((p) => p.seite && p.seite !== id && p.unterseiten.includes(id))?.seite ?? undefined;
 }
 
-const sortiert = (a: Seite, b: Seite) =>
-  (a.data.reihenfolge ?? 99) - (b.data.reihenfolge ?? 99) || a.data.titel.localeCompare(b.data.titel, 'de');
+export function seitenUrl(seite: Seite | string): string {
+  const id = typeof seite === 'string' ? seite : seite.id;
+  if (id === 'start') return '/';
+  const ober = oberseite(id);
+  return ober ? `/${ober}/${id}/` : `/${id}/`;
+}
 
 export type NavItem = { label: string; href: string; children: NavItem[] };
 
 export async function navigation(): Promise<NavItem[]> {
-  const alle = (await getCollection('seiten')).filter((s) => s.data.imMenue).sort(sortiert);
-  return alle
-    .filter((s) => s.data.bereich === 'keiner')
-    .map((s) => ({
-      label: s.data.titel,
-      href: seitenUrl(s),
-      children: alle
-        .filter((kind) => kind.data.bereich === s.id)
-        .map((kind) => ({ label: kind.data.titel, href: seitenUrl(kind), children: [] })),
-    }));
+  const alle = await getCollection('seiten');
+  const eintrag = (id: string | null): NavItem | null => {
+    const s = alle.find((x) => x.id === id);
+    return s ? { label: s.data.titel, href: seitenUrl(s), children: [] } : null;
+  };
+  return menue.punkte.flatMap((p) => {
+    const item = eintrag(p.seite);
+    if (!item) return [];
+    item.children = p.unterseiten.map(eintrag).filter((x): x is NavItem => Boolean(x));
+    return [item];
+  });
 }
 
 /** Prüft, ob eine Datei aus /public wirklich existiert, damit fehlende Bilder nicht als kaputte Grafik erscheinen. */

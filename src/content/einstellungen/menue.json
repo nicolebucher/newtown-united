@@ -1,0 +1,31 @@
+{
+  "punkte": [
+    {
+      "seite": "abteilung-sport",
+      "unterseiten": [
+        "bunte-liga-dresden",
+        "ping-pong-united",
+        "sport-fuer-alle"
+      ]
+    },
+    {
+      "seite": "loud-united",
+      "unterseiten": []
+    },
+    {
+      "seite": "st-pieschen",
+      "unterseiten": []
+    },
+    {
+      "seite": "portfolio",
+      "unterseiten": [
+        "lesung-freunde",
+        "oi-the-cup-2025"
+      ]
+    },
+    {
+      "seite": "impressum",
+      "unterseiten": []
+    }
+  ]
+}
