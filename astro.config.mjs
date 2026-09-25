@@ -10,5 +10,9 @@ export default defineConfig({
   // Alle Seiten werden statisch gebaut, nur der Editor unter /keystatic läuft auf dem Server.
   adapter: vercel(),
   devToolbar: { enabled: false },
+  // Alte Adressen weiterleiten, damit bestehende Links funktionieren.
+  redirects: {
+    '/blind-kick': '/st-pieschen/',
+  },
   integrations: [react(), markdoc(), keystatic()],
 });
