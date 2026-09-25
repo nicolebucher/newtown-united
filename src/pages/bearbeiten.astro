@@ -1,0 +1,106 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import menue from '../content/einstellungen/menue.json';
+import { seitenUrl, type Seite } from '../lib/seiten';
+
+// Übersicht für alle, die die Website pflegen: große Knöpfe in den Editor, Anleitung und alle Seiten.
+// Online speichert Keystatic über GitHub, dort beginnen die Editor-Adressen mit dem Branch.
+const ks = import.meta.env.PROD ? '/keystatic/branch/main' : '/keystatic';
+const bearbeiten = (id: string) => `${ks}/collection/seiten/item/${id}`;
+
+const alle = await getCollection('seiten');
+const finde = (id: string | null) => alle.find((s) => s.id === id);
+type Zeile = { seite: Seite; name: string; unter: boolean };
+const imMenue: Zeile[] = menue.punkte.flatMap((p) => {
+  const s = finde(p.seite);
+  if (!s) return [];
+  return [
+    { seite: s, name: p.name || s.data.titel, unter: false },
+    ...p.unterseiten.flatMap((u) => {
+      const k = finde(u.seite);
+      return k ? [{ seite: k, name: u.name || k.data.titel, unter: true }] : [];
+    }),
+  ];
+});
+const ohneMenue = alle
+  .filter((s) => !imMenue.some((z) => z.seite.id === s.id))
+  .sort((a, b) => (a.id === 'start' ? -1 : b.id === 'start' ? 1 : a.data.titel.localeCompare(b.data.titel, 'de')))
+  .map((s) => ({ seite: s, name: s.id === 'start' ? 'Startseite' : s.data.titel, unter: false }));
+---
+<Base title="Website bearbeiten" noindex>
+  <section class="hero wrap">
+    <span class="kicker">Nur für den Verein</span>
+    <h1>Website bearbeiten</h1>
+    <p class="lead">Hier findest du alles, um Texte, Bilder, Seiten und das Menü zu ändern. Beim ersten Klick meldest du dich mit deinem GitHub-Konto an.</p>
+    <div class="btn-row">
+      <a class="btn" href={`${ks}/collection/seiten/create`}>+ Neue Seite anlegen</a>
+      <a class="btn ghost" href={`${ks}/singleton/menue`}>Menü ändern</a>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <h2>Was möchtest du tun?</h2>
+    <div class="aufgaben">
+      <a class="aufgabe" href="#seiten"><strong>Text oder Bild auf einer Seite ändern</strong><span>Unten die Seite suchen und auf „Bearbeiten“ klicken.</span></a>
+      <a class="aufgabe" href={`${ks}/collection/seiten/create`}><strong>Neue Seite anlegen</strong><span>Zum Beispiel für eine neue Veranstaltung. Anleitung weiter unten.</span></a>
+      <a class="aufgabe" href={`${ks}/singleton/menue`}><strong>Menü ändern</strong><span>Reihenfolge, Namen und welche Seiten in einer Kategorie stehen.</span></a>
+      <a class="aufgabe" href={`${ks}/singleton/liga`}><strong>BUNTE Liga aktualisieren</strong><span>Spieltage, Zahlen, Partner und Regelwerk.</span></a>
+      <a class="aufgabe" href={`${ks}/singleton/verein`}><strong>Vereinsdaten</strong><span>Name, E-Mail, Instagram und Logo.</span></a>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <h2>So legst du eine neue Seite an</h2>
+    <ol class="schritte">
+      <li><strong>„+ Neue Seite anlegen“ klicken</strong> und oben den <em>Seitennamen</em> eintragen. Die Adresse füllt sich von selbst.</li>
+      <li><strong>1. Kopfbereich</strong> ausfüllen: Einleitung, gern ein Bild und bei Bedarf einen Button.</li>
+      <li><strong>2. Hauptteil</strong> schreiben. Über die Leiste oben machst du Überschriften, Fettes, Listen, Links und Bilder.</li>
+      <li>Unten noch eine <strong>Kurzbeschreibung</strong> (ein Satz) und rechts oben <strong>„Speichern“</strong> bzw. „Create“ klicken.</li>
+      <li>Damit die Seite im Menü erscheint: <strong>„Menü ändern“</strong> öffnen, beim passenden Menüpunkt unter <em>Unterpunkte</em> auf „Hinzufügen“ klicken, die Seite auswählen, „Done“ und danach oben rechts „Save“ klicken.</li>
+    </ol>
+    <p class="hinweis">Ein paar Knöpfe im Editor sind englisch: „Save“ oder „Create“ heißt Speichern, „Done“ heißt Fertig.</p>
+    <p class="hinweis">Nach dem Speichern dauert es ein bis zwei Minuten, bis die Änderung online ist. Zum Nachschauen gibt es bei jeder Seite oben rechts im Menü (⋯) den Punkt <strong>„Preview“</strong>, oder hier unten „Ansehen“.</p>
+  </section>
+
+  <section class="section wrap" id="seiten">
+    <h2>Alle Seiten</h2>
+    <h3>Im Menü</h3>
+    <ul class="seitenliste">
+      {imMenue.map((z) => (
+        <li class:list={{ unter: z.unter }}>
+          <span class="name">{z.unter && <span aria-hidden="true">↳ </span>}{z.name}</span>
+          <a class="btn klein" href={bearbeiten(z.seite.id)}>Bearbeiten</a>
+          <a class="btn ghost klein" href={seitenUrl(z.seite)}>Ansehen</a>
+        </li>
+      ))}
+    </ul>
+    <h3>Nicht im Menü</h3>
+    <p class="hinweis">Diese Seiten sind über Buttons oder Links erreichbar, stehen aber nicht im Menü.</p>
+    <ul class="seitenliste">
+      {ohneMenue.map((z) => (
+        <li>
+          <span class="name">{z.name}</span>
+          <a class="btn klein" href={bearbeiten(z.seite.id)}>Bearbeiten</a>
+          <a class="btn ghost klein" href={seitenUrl(z.seite)}>Ansehen</a>
+        </li>
+      ))}
+    </ul>
+  </section>
+</Base>
+
+<style>
+  .aufgaben { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; }
+  .aufgabe { display: flex; flex-direction: column; gap: 6px; padding: 18px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; color: var(--fg); text-decoration: none; }
+  .aufgabe:hover { border-color: var(--rot-hover); }
+  .aufgabe span { color: var(--muted); font-size: .95rem; }
+  .schritte { max-width: 720px; padding-left: 1.3em; }
+  .schritte li { margin-bottom: 10px; }
+  .hinweis { color: var(--muted); max-width: 720px; }
+  h3 { margin-top: 28px; }
+  .seitenliste { list-style: none; padding: 0; margin: 0; max-width: 720px; }
+  .seitenliste li { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+  .seitenliste li.unter { padding-left: 22px; }
+  .seitenliste .name { flex: 1; min-width: 0; }
+  .btn.klein { padding: 6px 14px; font-size: .9rem; }
+</style>

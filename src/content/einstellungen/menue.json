@@ -1,29 +1,49 @@
 {
   "punkte": [
     {
+      "name": "Abteilung Sport",
       "seite": "abteilung-sport",
       "unterseiten": [
-        "bunte-liga-dresden",
-        "ping-pong-united",
-        "sport-fuer-alle"
+        {
+          "name": "BUNTE Liga Dresden",
+          "seite": "bunte-liga-dresden"
+        },
+        {
+          "name": "Ping Pong United",
+          "seite": "ping-pong-united"
+        },
+        {
+          "name": "Sport für Alle",
+          "seite": "sport-fuer-alle"
+        }
       ]
     },
     {
+      "name": "LOUD & UNITED",
       "seite": "loud-united",
       "unterseiten": []
     },
     {
+      "name": "St. Pieschen",
       "seite": "st-pieschen",
       "unterseiten": []
     },
     {
+      "name": "Portfolio",
       "seite": "portfolio",
       "unterseiten": [
-        "lesung-freunde",
-        "oi-the-cup-2025"
+        {
+          "name": "Lesung „Freunde“",
+          "seite": "lesung-freunde"
+        },
+        {
+          "name": "Oi! the Cup 2025",
+          "seite": "oi-the-cup-2025"
+        }
       ]
     },
     {
+      "name": "Impressum",
       "seite": "impressum",
       "unterseiten": []
     }

@@ -5,12 +5,13 @@ import menueDaten from '../content/einstellungen/menue.json';
 
 export type Seite = CollectionEntry<'seiten'>;
 
-type Menue = { punkte: { seite: string | null; unterseiten: (string | null)[] }[] };
+type MenueEintrag = { name?: string | null; seite: string | null };
+type Menue = { punkte: (MenueEintrag & { unterseiten: MenueEintrag[] })[] };
 const menue = menueDaten as Menue;
 
 /** Oberseite laut Menü: Unterseiten bekommen deren Adresse als Präfix, z. B. /abteilung-sport/bunte-liga-dresden/. */
 function oberseite(id: string): string | undefined {
-  return menue.punkte.find((p) => p.seite && p.seite !== id && p.unterseiten.includes(id))?.seite ?? undefined;
+  return menue.punkte.find((p) => p.seite && p.seite !== id && p.unterseiten.some((u) => u.seite === id))?.seite ?? undefined;
 }
 
 export function seitenUrl(seite: Seite | string): string {
@@ -24,12 +25,12 @@ export type NavItem = { label: string; href: string; children: NavItem[] };
 
 export async function navigation(): Promise<NavItem[]> {
   const alle = await getCollection('seiten');
-  const eintrag = (id: string | null): NavItem | null => {
-    const s = alle.find((x) => x.id === id);
-    return s ? { label: s.data.titel, href: seitenUrl(s), children: [] } : null;
+  const eintrag = ({ name, seite }: MenueEintrag): NavItem | null => {
+    const s = alle.find((x) => x.id === seite);
+    return s ? { label: name || s.data.titel, href: seitenUrl(s), children: [] } : null;
   };
   return menue.punkte.flatMap((p) => {
-    const item = eintrag(p.seite);
+    const item = eintrag(p);
     if (!item) return [];
     item.children = p.unterseiten.map(eintrag).filter((x): x is NavItem => Boolean(x));
     return [item];

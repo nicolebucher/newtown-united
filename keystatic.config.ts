@@ -24,6 +24,8 @@ export default config({
       path: 'src/content/seiten/*',
       format: { contentField: 'inhalt' },
       columns: ['titel'],
+      // Knopf „Preview“ oben rechts im Menü (⋯) einer Seite: öffnet die Seite auf der Website.
+      previewUrl: '/vorschau/{slug}',
       schema: {
         titel: fields.slug({
           name: {
@@ -183,26 +185,44 @@ export default config({
       schema: {
         punkte: fields.array(
           fields.object({
+            name: fields.text({
+              label: 'Name im Menü',
+              description: 'So steht der Punkt im Menü, z. B. „Portfolio“. Leer lassen, dann wird der Seitenname verwendet.',
+            }),
             seite: fields.relationship({
-              label: 'Seite im Menü',
+              label: 'Welche Seite öffnet sich beim Klick?',
               collection: 'seiten',
               validation: { isRequired: true },
             }),
             unterseiten: fields.array(
-              fields.relationship({ label: 'Unterseite', collection: 'seiten', validation: { isRequired: true } }),
+              fields.object({
+                name: fields.text({
+                  label: 'Name im Aufklappmenü',
+                  description: 'Leer lassen, dann wird der Seitenname verwendet.',
+                }),
+                seite: fields.relationship({
+                  label: 'Welche Seite öffnet sich beim Klick?',
+                  collection: 'seiten',
+                  validation: { isRequired: true },
+                }),
+              }),
               {
-                label: 'Unterseiten (Kategorie)',
-                description: 'Diese Seiten erscheinen im Aufklappmenü unter dem Menüpunkt, und ihre Adresse beginnt mit ihm.',
-                itemLabel: (p) => p.value ?? 'Seite wählen',
+                label: 'Unterpunkte im Aufklappmenü',
+                description: 'Die Seiten dieser Kategorie. Ihre Webadresse beginnt dann mit der Adresse des Menüpunkts.',
+                itemLabel: (p) => p.fields.name.value || p.fields.seite.value || 'Neuer Unterpunkt',
               },
             ),
           }),
           {
             label: 'Menüpunkte',
-            description: 'Reihenfolge per Ziehen ändern. Seiten, die hier fehlen, gibt es trotzdem, sie stehen nur nicht im Menü.',
-            itemLabel: (p) =>
-              (p.fields.seite.value ?? 'Seite wählen') +
-              (p.fields.unterseiten.elements.length ? ` (${p.fields.unterseiten.elements.length} Unterseiten)` : ''),
+            description: 'Anklicken zum Bearbeiten, an den sechs Punkten links ziehen, um die Reihenfolge zu ändern. „Hinzufügen“ legt einen neuen Menüpunkt an. Seiten, die hier fehlen, gibt es trotzdem, sie stehen nur nicht im Menü.',
+            itemLabel: (p) => {
+              const name = p.fields.name.value || p.fields.seite.value || 'Neuer Menüpunkt';
+              const unter = p.fields.unterseiten.elements
+                .map((u) => u.fields.name.value || u.fields.seite.value)
+                .filter(Boolean);
+              return unter.length ? `${name}  ▸  ${unter.join(' · ')}` : name;
+            },
           },
         ),
       },
