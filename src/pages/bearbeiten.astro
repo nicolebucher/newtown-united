@@ -1,0 +1,133 @@
+---
+// Übersicht für alle, die die Website pflegen: große Knöpfe in den Editor, Schritt-für-Schritt-Hilfe
+// und eine Liste aller Seiten mit direktem „Bearbeiten“-Link.
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import { navigation, seitenUrl } from '../lib/seiten';
+import { verein } from '../lib/einstellungen';
+
+const editor = '/keystatic';
+const links = {
+  neueSeite: `${editor}/collection/seiten/create`,
+  alleSeiten: `${editor}/collection/seiten`,
+  menue: `${editor}/singleton/menue`,
+  liga: `${editor}/singleton/liga`,
+  verein: `${editor}/singleton/verein`,
+  seite: (id: string) => `${editor}/collection/seiten/item/${id}`,
+};
+
+const nav = await navigation();
+const imMenue = new Set(nav.flatMap((p) => [p.href, ...p.children.map((c) => c.href)]));
+const seiten = (await getCollection('seiten'))
+  .map((s) => ({ id: s.id, titel: s.data.titel, url: seitenUrl(s) }))
+  .sort((a, b) => (a.id === 'start' ? -1 : b.id === 'start' ? 1 : a.titel.localeCompare(b.titel, 'de')));
+---
+<Base title="Website bearbeiten" noindex>
+  <section class="hero wrap">
+    <span class="kicker">Für alle, die die Website pflegen</span>
+    <h1>Website bearbeiten</h1>
+    <p class="lead">
+      Hier findest du alles, um Texte, Bilder, Termine und das Menü zu ändern. Du brauchst keine Vorkenntnisse.
+      Beim ersten Klick meldest du dich einmal mit deinem Konto an.
+    </p>
+    <div class="btn-row">
+      <a class="btn gross" href={links.neueSeite}>+ Neue Seite anlegen</a>
+      <a class="btn ghost gross" href={links.alleSeiten}>Bestehende Seite ändern</a>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <h2>Was möchtest du tun?</h2>
+    <div class="cards">
+      <a class="card" href={links.neueSeite}>
+        <h3>Neue Seite anlegen</h3>
+        <p>Zum Beispiel für eine neue Veranstaltung, ein Turnier oder eine Lesung.</p>
+      </a>
+      <a class="card" href={links.alleSeiten}>
+        <h3>Text oder Bild ändern</h3>
+        <p>Seite aus der Liste wählen, ändern, speichern. Fertig.</p>
+      </a>
+      <a class="card" href={links.menue}>
+        <h3>Menü ändern</h3>
+        <p>Seiten ins Menü aufnehmen, entfernen oder die Reihenfolge ändern.</p>
+      </a>
+      <a class="card" href={links.liga}>
+        <h3>BUNTE Liga</h3>
+        <p>Spieltage, Zahlen, Partner und Regelwerk.</p>
+      </a>
+      <a class="card" href={links.verein}>
+        <h3>Vereinsdaten</h3>
+        <p>E-Mail-Adresse, Instagram und Logo.</p>
+      </a>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <h2>So legst du eine neue Seite an</h2>
+    <ol class="schritte">
+      <li>
+        <b>Auf „+ Neue Seite anlegen“ klicken.</b>
+        Beim ersten Mal meldest du dich an.
+      </li>
+      <li>
+        <b>Seitenname eintragen</b>, zum Beispiel „Oi! the Cup 2026“. Die Adresse der Seite wird automatisch daraus gemacht.
+      </li>
+      <li>
+        <b>Die drei Bereiche ausfüllen:</b> 1. Kopfbereich (Überschrift, kurzer Text, Bild, Buttons),
+        2. Hauptteil (der eigentliche Text), 3. Unter dem Hauptteil (Downloads oder Formular, alles freiwillig).
+        Was du nicht brauchst, lässt du einfach leer.
+      </li>
+      <li>
+        <b>Oben rechts auf „Erstellen“ klicken</b> (bei bestehenden Seiten „Speichern“; ist der Editor auf Englisch: „Create“ bzw. „Save“).
+      </li>
+      <li>
+        <b>Seite ins Menü aufnehmen:</b> unter <a href={links.menue}>Menü ändern</a> einen Menüpunkt hinzufügen und die neue Seite
+        auswählen, oder sie bei einem bestehenden Menüpunkt unter „Unterseiten“ eintragen. Danach wieder speichern.
+      </li>
+      <li>
+        <b>Warten.</b> Nach ein bis zwei Minuten ist alles online. Neu laden, falls du noch den alten Stand siehst.
+      </li>
+    </ol>
+  </section>
+
+  <section class="section wrap">
+    <h2>Alle Seiten</h2>
+    <p class="hinweis">Seiten ohne den Hinweis „im Menü“ gibt es trotzdem, sie sind nur nicht im Menü verlinkt.</p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Seite</th><th>Im Menü</th><th></th></tr>
+        </thead>
+        <tbody>
+          {seiten.map((s) => (
+            <tr>
+              <td><a href={s.url}>{s.titel}</a><br /><small>{s.url}</small></td>
+              <td>{s.id === 'start' ? 'Startseite' : imMenue.has(s.url) ? 'im Menü' : '–'}</td>
+              <td class="aktionen"><a class="btn ghost klein" href={s.url}>Ansehen</a> <a class="btn klein" href={links.seite(s.id)}>Bearbeiten</a></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <h2>Gut zu wissen</h2>
+    <ul class="hinweise">
+      <li><b>Keine Angst vor Fehlern.</b> Jede Änderung wird einzeln gespeichert, ein älterer Stand lässt sich jederzeit wiederherstellen.</li>
+      <li><b>Bilder</b> lädst du direkt beim Bearbeiten hoch. Am besten im Querformat und nicht größer als 2 MB.</li>
+      <li><b>Die Adresse einer Seite</b> nach dem Veröffentlichen besser nicht mehr ändern, sonst funktionieren alte Links nicht mehr.</li>
+      {verein.email && <li><b>Hilfe gebraucht?</b> Schreib an <a href={`mailto:${verein.email}`}>{verein.email}</a>.</li>}
+    </ul>
+  </section>
+</Base>
+
+<style>
+  .gross { font-size: 1.15rem; padding: .9em 1.6em; }
+  .klein { padding: .35em .9em; font-size: .9rem; white-space: nowrap; }
+  .schritte { max-width: 70ch; padding-left: 1.4em; display: grid; gap: .8em; }
+  .schritte b { display: block; }
+  .hinweis, td small { color: var(--muted); }
+  .hinweise { max-width: 70ch; padding-left: 1.2em; display: grid; gap: .5em; }
+  .aktionen { text-align: right; white-space: nowrap; }
+</style>

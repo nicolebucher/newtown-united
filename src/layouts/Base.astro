@@ -11,9 +11,11 @@ const site = { name: verein.name || 'Newtown United e.V.' };
 interface Props {
   title?: string;
   description?: string;
+  /** Seite nicht in Suchmaschinen aufnehmen (z. B. die Bearbeitungs-Übersicht). */
+  noindex?: boolean;
 }
 
-const { title, description = 'Newtown United e.V. – Sport- und Kulturverein aus Dresden.' } = Astro.props;
+const { title, noindex = false, description = 'Newtown United e.V. – Sport- und Kulturverein aus Dresden.' } = Astro.props;
 const fullTitle = title ? `${title} – ${site.name}` : site.name;
 const path = Astro.url.pathname;
 const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
@@ -25,6 +27,7 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWit
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex" />}
     <link rel="canonical" href={new URL(path, Astro.site)} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <meta property="og:title" content={fullTitle} />
@@ -76,6 +79,7 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWit
           {verein.instagram && <li><a href={verein.instagram} rel="noopener">Instagram</a></li>}
           <li><a href="/impressum/">Impressum</a></li>
           <li><a href="/impressum/#datenschutz">Datenschutz</a></li>
+          <li><a href="/bearbeiten/">Website bearbeiten</a></li>
         </ul>
         <div class="copy">© {new Date().getFullYear()} {site.name}</div>
       </div>

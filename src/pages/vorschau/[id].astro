@@ -1,0 +1,13 @@
+---
+// Ziel des „Vorschau“-Knopfs im Editor: Keystatic kennt nur den Dateinamen der Seite,
+// die echte Adresse hängt aber vom Menü ab (Unterseiten liegen unter ihrem Menüpunkt).
+import { getCollection } from 'astro:content';
+import { seitenUrl } from '../../lib/seiten';
+
+export async function getStaticPaths() {
+  const seiten = await getCollection('seiten');
+  return seiten.map((seite) => ({ params: { id: seite.id }, props: { ziel: seitenUrl(seite) } }));
+}
+
+return Astro.redirect(Astro.props.ziel);
+---

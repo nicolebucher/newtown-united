@@ -11,10 +11,11 @@ export default config({
   cloud: { project: 'newtown-united/newtown-united' },
   locale: 'de-DE',
   ui: {
-    brand: { name: 'Newtown United' },
+    brand: { name: 'Newtown United – Website bearbeiten' },
     navigation: {
-      Website: ['seiten', 'menue'],
-      Einstellungen: ['liga', 'verein'],
+      'Texte und Bilder': ['seiten'],
+      'Menü oben auf der Website': ['menue'],
+      'BUNTE Liga und Verein': ['liga', 'verein'],
     },
   },
   collections: {
@@ -22,6 +23,8 @@ export default config({
       label: 'Seiten',
       slugField: 'titel',
       path: 'src/content/seiten/*',
+      // „Vorschau“-Knopf: öffnet die veröffentlichte Seite (Änderungen erscheinen nach ein bis zwei Minuten).
+      previewUrl: '/vorschau/{slug}',
       format: { contentField: 'inhalt' },
       columns: ['titel'],
       schema: {
@@ -177,8 +180,9 @@ export default config({
   },
   singletons: {
     menue: singleton({
-      label: 'Menü',
+      label: 'Menü ändern',
       path: 'src/content/einstellungen/menue',
+      previewUrl: '/',
       format: 'json',
       schema: {
         punkte: fields.array(
@@ -199,7 +203,7 @@ export default config({
           }),
           {
             label: 'Menüpunkte',
-            description: 'Reihenfolge per Ziehen ändern. Seiten, die hier fehlen, gibt es trotzdem, sie stehen nur nicht im Menü.',
+            description: 'Neuer Menüpunkt: auf den Knopf unter der Liste klicken und eine Seite wählen. Reihenfolge per Ziehen am Griff links ändern. Zum Schluss oben rechts speichern. Seiten, die hier fehlen, gibt es trotzdem, sie stehen nur nicht im Menü.',
             itemLabel: (p) =>
               (p.fields.seite.value ?? 'Seite wählen') +
               (p.fields.unterseiten.elements.length ? ` (${p.fields.unterseiten.elements.length} Unterseiten)` : ''),
@@ -208,8 +212,9 @@ export default config({
       },
     }),
     liga: singleton({
-      label: 'BUNTE Liga',
+      label: 'BUNTE Liga: Spieltage und Zahlen',
       path: 'src/content/einstellungen/liga',
+      previewUrl: '/vorschau/bunte-liga-dresden',
       format: 'json',
       schema: {
         saison: fields.text({ label: 'Saison', defaultValue: '2026' }),
@@ -238,8 +243,9 @@ export default config({
       },
     }),
     verein: singleton({
-      label: 'Verein',
+      label: 'Vereinsdaten: E-Mail, Instagram, Logo',
       path: 'src/content/einstellungen/verein',
+      previewUrl: '/',
       format: 'json',
       schema: {
         name: fields.text({ label: 'Vereinsname', defaultValue: 'Newtown United e.V.' }),
