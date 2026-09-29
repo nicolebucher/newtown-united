@@ -5,7 +5,7 @@ Inhalte werden im Browser mit dem Editor [Keystatic](https://keystatic.com) gepf
 
 ## Inhalte bearbeiten
 
-Am einfachsten über **newtownunited.de/bearbeiten** (Link unten auf jeder Seite): dort gibt es eine Übersicht,
+Am einfachsten über **newtownunited.de/bearbeiten** (Adresse als Lesezeichen speichern): dort gibt es eine Übersicht,
 den Knopf „Neue Seite anlegen“ und eine Anleitung. Der Editor selbst liegt unter **/keystatic**:
 
 - **Seiten**: alle Seiten der Website. Jede Seite hat drei Teile: 1. Kopfbereich (Hauptüberschrift H1,
