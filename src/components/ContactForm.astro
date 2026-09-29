@@ -1,6 +1,6 @@
 ---
-// Formular läuft über FormSubmit (https://formsubmit.co), Nachrichten gehen an die Vereins-E-Mail
-// (Einstellungen → Verein). Beim allerersten Absenden kommt dort eine Mail zum Bestätigen.
+// Formular läuft über Formspree (https://formspree.io). Die Formular-Adresse steht unter
+// Einstellungen → Verein; Formspree leitet die Nachrichten an die dort hinterlegte E-Mail weiter.
 import { verein } from '../lib/einstellungen';
 interface Props {
   subject?: string;
@@ -16,12 +16,10 @@ const {
   showMessage = true,
   art = 'kontakt',
 } = Astro.props;
-const empfaenger = verein.email || 'newtownunited@web.de';
+const formularAdresse = verein.formularAdresse || 'https://formspree.io/f/mrpbrjyb';
 ---
-<form class="contact-form" action={`https://formsubmit.co/${empfaenger}`} method="POST">
-  <input type="hidden" name="_template" value="table" />
-  <input type="hidden" name="_next" value="/danke/" data-danke />
-  <input type="text" name="_honey" class="hp" tabindex="-1" autocomplete="off" />
+<form class="contact-form" action={formularAdresse} method="POST" data-formspree>
+  <input type="text" name="_gotcha" class="hp" tabindex="-1" autocomplete="off" />
   {art === 'team' && <label>Teamname<input name="teamname" required /></label>}
   <label>{art === 'team' ? 'Ansprechperson' : 'Name'}<input name="name" required autocomplete="name" /></label>
   <label>E-Mail<input type="email" name="email" required autocomplete="email" /></label>
@@ -44,12 +42,31 @@ const empfaenger = verein.email || 'newtownunited@web.de';
     <span>Ich bin einverstanden, dass meine Angaben zur Bearbeitung der Anfrage gespeichert werden. Mehr dazu in der <a href="/impressum/#datenschutz">Datenschutzerklärung</a>.</span>
   </label>
   <button class="btn" type="submit">{submitLabel}</button>
+  <p class="fehler" role="alert" hidden>Das hat leider nicht geklappt. Bitte versuch es noch einmal oder schreib uns an {verein.email}.</p>
 </form>
 
 <script>
-  // FormSubmit braucht die Danke-Seite als vollständige Adresse.
-  document.querySelectorAll<HTMLInputElement>('input[data-danke]').forEach((el) => {
-    el.value = new URL('/danke/', location.origin).href;
+  // Absenden im Hintergrund, danach auf die eigene Danke-Seite. Ohne JavaScript zeigt Formspree seine eigene Bestätigung.
+  document.querySelectorAll<HTMLFormElement>('form[data-formspree]').forEach((form) => {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const button = form.querySelector('button');
+      const fehler = form.querySelector<HTMLElement>('.fehler');
+      if (button) button.disabled = true;
+      if (fehler) fehler.hidden = true;
+      try {
+        const antwort = await fetch(form.action, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { Accept: 'application/json' },
+        });
+        if (!antwort.ok) throw new Error(String(antwort.status));
+        location.href = '/danke/';
+      } catch {
+        if (fehler) fehler.hidden = false;
+        if (button) button.disabled = false;
+      }
+    });
   });
 </script>
 
@@ -63,4 +80,5 @@ const empfaenger = verein.email || 'newtownunited@web.de';
   .hp { display: none; }
   .zwei { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
   button { justify-self: start; }
+  .fehler { margin: 0; color: var(--link); font-weight: 600; }
 </style>

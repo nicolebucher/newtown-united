@@ -265,6 +265,10 @@ export default config({
         name: fields.text({ label: 'Vereinsname', defaultValue: 'Newtown United e.V.' }),
         untertitel: fields.text({ label: 'Untertitel im Fußbereich', defaultValue: 'Sport- und Kulturverein aus Dresden' }),
         email: fields.text({ label: 'E-Mail' }),
+        formularAdresse: fields.url({
+          label: 'Formular-Adresse (Formspree)',
+          description: 'Die Adresse von formspree.io, z. B. https://formspree.io/f/abcd1234. Dorthin schicken alle Formulare der Website. Nur ändern, wenn ihr ein neues Formspree-Formular anlegt.',
+        }),
         instagram: fields.url({ label: 'Instagram' }),
         logo: fields.image({ label: 'Logo', directory: 'public/images', publicPath: '/images/' }),
       },
