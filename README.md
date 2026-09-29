@@ -26,8 +26,8 @@ Nach dem Speichern ist die Änderung nach ein bis zwei Minuten online.
    ein Team und ein Projekt anlegen und das Projekt mit diesem Repository verbinden.
    Den Projektnamen (Form `team/projekt`) in `keystatic.config.ts` bei `cloud.project` eintragen.
    Der kostenlose Tarif reicht für bis zu 3 Personen.
-3. **Formulare**: auf web3forms.com mit der Vereins-E-Mail einen Zugangsschlüssel holen und in Vercel
-   unter Settings → Environment Variables als `PUBLIC_WEB3FORMS_KEY` eintragen.
+3. **Formulare** laufen über formsubmit.co an die E-Mail unter Einstellungen → Verein. Beim ersten
+   Absenden kommt an diese Adresse eine Bestätigungsmail („Activate Form“), einmal draufklicken, fertig.
 
 ## Für Entwickler
 

@@ -1,6 +1,7 @@
 ---
-// Formular läuft über Web3Forms (https://web3forms.com), Nachrichten kommen per E-Mail.
-// Den Zugangsschlüssel als PUBLIC_WEB3FORMS_KEY in Vercel eintragen.
+// Formular läuft über FormSubmit (https://formsubmit.co), Nachrichten gehen an die Vereins-E-Mail
+// (Einstellungen → Verein). Beim allerersten Absenden kommt dort eine Mail zum Bestätigen.
+import { verein } from '../lib/einstellungen';
 interface Props {
   subject?: string;
   subjects?: string[];
@@ -15,12 +16,12 @@ const {
   showMessage = true,
   art = 'kontakt',
 } = Astro.props;
-const accessKey = import.meta.env.PUBLIC_WEB3FORMS_KEY ?? '';
+const empfaenger = verein.email || 'newtownunited@web.de';
 ---
-<form class="contact-form" action="https://api.web3forms.com/submit" method="POST">
-  <input type="hidden" name="access_key" value={accessKey} />
-  <input type="hidden" name="from_name" value="newtownunited.de" />
-  <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" />
+<form class="contact-form" action={`https://formsubmit.co/${empfaenger}`} method="POST">
+  <input type="hidden" name="_template" value="table" />
+  <input type="hidden" name="_next" value="/danke/" data-danke />
+  <input type="text" name="_honey" class="hp" tabindex="-1" autocomplete="off" />
   {art === 'team' && <label>Teamname<input name="teamname" required /></label>}
   <label>{art === 'team' ? 'Ansprechperson' : 'Name'}<input name="name" required autocomplete="name" /></label>
   <label>E-Mail<input type="email" name="email" required autocomplete="email" /></label>
@@ -31,10 +32,10 @@ const accessKey = import.meta.env.PUBLIC_WEB3FORMS_KEY ?? '';
     </div>
   )}
   {subject ? (
-    <input type="hidden" name="subject" value={subject} />
+    <input type="hidden" name="_subject" value={subject} />
   ) : (
     <label>Betreff
-      <select name="subject">{subjects.map((s) => <option>{s}</option>)}</select>
+      <select name="_subject">{subjects.map((s) => <option>{s}</option>)}</select>
     </label>
   )}
   {showMessage && <label>{art === 'team' ? 'Nachricht (optional)' : 'Nachricht'}<textarea name="message" rows="5" required={art !== 'team'}></textarea></label>}
@@ -44,6 +45,13 @@ const accessKey = import.meta.env.PUBLIC_WEB3FORMS_KEY ?? '';
   </label>
   <button class="btn" type="submit">{submitLabel}</button>
 </form>
+
+<script>
+  // FormSubmit braucht die Danke-Seite als vollständige Adresse.
+  document.querySelectorAll<HTMLInputElement>('input[data-danke]').forEach((el) => {
+    el.value = new URL('/danke/', location.origin).href;
+  });
+</script>
 
 <style>
   .contact-form { display: grid; gap: 14px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; max-width: 560px; }
