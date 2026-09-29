@@ -21,7 +21,12 @@
     {
       "name": "LOUD & UNITED",
       "seite": "loud-united",
-      "unterseiten": []
+      "unterseiten": [
+        {
+          "name": "Volume 1",
+          "seite": "volume-1"
+        }
+      ]
     },
     {
       "name": "St. Pieschen",
