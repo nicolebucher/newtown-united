@@ -39,7 +39,7 @@ const formularAdresse = verein.formularAdresse || 'https://formspree.io/f/mrpbrj
   {showMessage && <label>{art === 'team' ? 'Nachricht (optional)' : 'Nachricht'}<textarea name="message" rows="5" required={art !== 'team'}></textarea></label>}
   <label class="consent">
     <input type="checkbox" required />
-    <span>Ich bin einverstanden, dass meine Angaben zur Bearbeitung der Anfrage gespeichert werden. Mehr dazu in der <a href="/impressum/#datenschutz">Datenschutzerklärung</a>.</span>
+    <span>Ich bin einverstanden, dass meine Angaben zur Bearbeitung der Anfrage gespeichert werden. Mehr dazu in der <a href="/datenschutz/">Datenschutzerklärung</a>.</span>
   </label>
   <button class="btn" type="submit">{submitLabel}</button>
   <p class="fehler" role="alert" hidden>Das hat leider nicht geklappt. Bitte versuch es noch einmal oder schreib uns an {verein.email}.</p>
