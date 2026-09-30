@@ -53,14 +53,14 @@ const formular = d.formular.discriminant ? d.formular.value : null;
           </div>
         )}
         {d.infos.length > 0 && !bild && (
-          <div class="info-box"><dl>{d.infos.map((i) => <><dt>{i.bezeichnung}</dt><dd>{i.wert}</dd></>)}</dl></div>
+          <div class="info-box"><dl>{d.infos.map((i) => (i.wert ? <><dt>{i.bezeichnung}</dt><dd>{i.wert}</dd></> : <dt class="zwischentitel">{i.bezeichnung}</dt>))}</dl></div>
         )}
       </div>
       {bild && (
         <div class="hero-media">
           <img src={bild} alt={d.bildText ?? ''} class="hero-img" />
           {d.infos.length > 0 && (
-            <div class="info-box"><dl>{d.infos.map((i) => <><dt>{i.bezeichnung}</dt><dd>{i.wert}</dd></>)}</dl></div>
+            <div class="info-box"><dl>{d.infos.map((i) => (i.wert ? <><dt>{i.bezeichnung}</dt><dd>{i.wert}</dd></> : <dt class="zwischentitel">{i.bezeichnung}</dt>))}</dl></div>
           )}
         </div>
       )}

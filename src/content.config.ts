@@ -31,7 +31,7 @@ const seiten = defineCollection({
           infos: z
             .array(z.object({ bezeichnung: z.string().default(''), wert: z.string().default('') }))
             .default([])
-            .transform((l) => l.filter((i) => i.wert)),
+            .transform((l) => l.filter((i) => i.bezeichnung || i.wert)),
           titelLogo: z.string().nullish(),
         })
         .prefault({}),
